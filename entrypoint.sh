@@ -21,9 +21,11 @@ end
 message = ARGV[0]
 check_duplicate_msg = ARGV[1]
 delete_prev_regex_msg = ARGV[2]
+pr_number = ARGV[3]
 repo = event["repository"]["full_name"]
 
-if ENV.fetch("GITHUB_EVENT_NAME") == "pull_request"
+if pr_number == "nil"
+	if ENV.fetch("GITHUB_EVENT_NAME") == "pull_request"
   pr_number = event["number"]
 else
   pulls = github.pull_requests(repo, state: "open")
@@ -36,6 +38,7 @@ else
     exit(1)
   end
   pr_number = pr["number"]
+	end
 end
 
 coms = github.issue_comments(repo, pr_number)
@@ -49,7 +52,7 @@ if check_duplicate_msg == "true"
   end
 end
 
-if delete_prev_regex_msg != nil
+if delete_prev_regex_msg != "nil"
   coms.each do |n|
     if n["body"].match(/#{delete_prev_regex_msg}/)
 	github.delete_comment(repo, n["id"], opt = {})

@@ -16,6 +16,10 @@ inputs:
     description: If not empty, all messages matching the given regex will be deleted.
     required: false
     default: nil
+  pr_number:
+    description: If not empty, action will this input instead of parsing it from event data
+    required: false
+    default: nil
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -23,3 +27,4 @@ runs:
     - ${{ inputs.msg }}
     - ${{ inputs.check_for_duplicate_msg }}
     - ${{ inputs.delete_prev_regex_msg }}
+    - ${{ inputs.pr_number }}
